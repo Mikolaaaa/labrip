@@ -1,3 +1,5 @@
+@media (max-width: 480px) {}
+
 .App {
   text-align: center;
 }
@@ -124,7 +126,6 @@ li {
 
 .name{
     font-size: 24px;
-    text-align: left;
     margin-left: 10px;
 }
 
@@ -348,4 +349,3 @@ li {
         vertical-align: middle;
         text-decoration:none;
 }
-

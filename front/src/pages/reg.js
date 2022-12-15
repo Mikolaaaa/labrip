@@ -85,7 +85,7 @@ function Reg() {
                               className="arm6_button"
                               onClick={() => Create()}
                         >
-                            Зарегестрироваться
+                            Зарегистрироваться
                         </Link>
                     </div>
                 </form>

@@ -57,7 +57,7 @@ function Priziv() {
     }
 
 
-        const handleClose3 = async ()=> {
+    const handleClose3 = async ()=> {
         const formData = new FormData()
         formData.append('name', name)
         formData.append('surname', surname)
@@ -77,7 +77,6 @@ function Priziv() {
             }
 
         })
-            .then(response => response.json())
             .then((result) => {
                 setPriziv(result);
             })

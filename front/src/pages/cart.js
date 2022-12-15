@@ -33,10 +33,10 @@ function Cart(){
             <h1>Список людей для отправки в армию</h1>
             {GetCart().map(cart =>
                 <div key = {cart.surname} className="priziv">
-                    <div className={"name"}><a>Фамилия:</a> {cart.surname}</div>
-                    <div className={"name"}><a>Имя:</a> {cart.name}</div>
-                    <div className={"name"}><a>Возраст:</a> {cart.vozrast}</div>
-                    <div className={"name"}><a>Категория:</a> {cart.categoriya}</div>
+                    <div className={"surname"}><a>Фамилия: {cart.surname}</a></div>
+                    <div className={"surname"}><a>Имя: {cart.name}</a></div>
+                    <div className={"surname"}><a>Возраст: {cart.vozrast}</a></div>
+                    <div className={"surname"}><a>Категория: {cart.categoriya}</a></div>
                     <Button variant="danger" class="btn btn-dark" onClick={()=>{del(cart.pk)}}>Вернуть домой</Button>
                 </div>)}
             <br/>

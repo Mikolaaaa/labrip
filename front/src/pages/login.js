@@ -103,6 +103,12 @@ export function Auth() {
                     >
                         Регистрация
                     </a>
+                    <a
+                        href="/komissar"
+                        className="arm6_button"
+                    >
+                        hihi
+                    </a>
                 </p>
         </div>
     );
