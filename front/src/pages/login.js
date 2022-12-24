@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import "../App.css"
+import "../App.css";
+import Cookies from 'universal-cookie';
 
 
 export function Auth() {
@@ -25,7 +26,8 @@ export function Auth() {
                 console.log(res);
                 const token = res.key;
                 sessionStorage.setItem('token', token);
-
+                const cookies = new Cookies();
+                cookies.set('session_cookie', token, { path: '/' });
                 fetch(`http://127.0.0.1:8000/rest-auth/user/`, {
                         headers: {
                             "Authorization": `Token ${sessionStorage.getItem('token')}`,
@@ -102,12 +104,6 @@ export function Auth() {
                         className="arm6_button"
                     >
                         Регистрация
-                    </a>
-                    <a
-                        href="/komissar"
-                        className="arm6_button"
-                    >
-                        hihi
                     </a>
                 </p>
         </div>

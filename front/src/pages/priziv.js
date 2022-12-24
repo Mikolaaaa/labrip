@@ -1,27 +1,30 @@
 import React, {useState, useEffect, useReducer} from 'react';
 import "../App.css"
 import {Link, useParams} from "react-router-dom";
-import {Button,  Form, Modal} from "react-bootstrap";
-import {GetPriziv} from "../context/provider";
-import {initialState, reducer} from "../context/reducer";
+import {Button, Container, Form, Modal, Row} from "react-bootstrap";
 import axios from "axios";
 
+
 function Priziv() {
+
     const params = useParams();
     const prizivId = params.id
 
-    const arm=(quantity, name, surname, vozrast, categoriya)=> {
+
+    const arm=(name, surname, vozrast, categoriya)=> {
         const ob = {
-            quantity: quantity,
+            session_cookie: sessionStorage.getItem('token'),
             name: name,
             surname: surname,
             vozrast: vozrast,
-            categoriya: categoriya
+            categoriya: categoriya,
+            status: "ждет медосмотра",
         }
-        fetch("http://127.0.0.1:8000/cart/", {
+        fetch("http://127.0.0.1:8000/addPr/", {
             method: "post",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization": `Token ${sessionStorage.getItem('token')}`,
             },
             body: JSON.stringify(ob)
         })
@@ -32,8 +35,8 @@ function Priziv() {
     }
 
 
+    const [show, setShow] = useState(false);
     const [show2, setShow2] = useState(false);
-    const [show3, setShow3] = useState(false);
     const [name, setName] = useState();
     const [surname, setSurname] = useState();
     const [patronymic, setPatronymic] = useState();
@@ -41,10 +44,12 @@ function Priziv() {
     const [otsrochka, setOtsrochka] = useState();
     const [adress, setAdress] = useState();
     const [categoriya, setCategoriya] = useState();
+    const [status, setStatus] = useState();
+    const [ID, setID] = useState();
 
-    const handleClose2 = async ()=> {
-        setShow2(false);
-        await fetch(`http://127.0.0.1:8000/prizivniki/${getInterval(min_price, max_price, value)}`, {
+    const handleClose = async ()=> {
+        setShow(false);
+        await fetch(`http://127.0.0.1:8000/prizivniki/${getInterval(min_vozrast, max_vozrast, surnamefil)}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Token ${sessionStorage.getItem('token')}`,
@@ -57,8 +62,9 @@ function Priziv() {
     }
 
 
-    const handleClose3 = async ()=> {
+    const handleClose2 = async ()=> {
         const formData = new FormData()
+        formData.append('ID', ID)
         formData.append('name', name)
         formData.append('surname', surname)
         formData.append('patronymic', patronymic)
@@ -66,7 +72,8 @@ function Priziv() {
         formData.append('otsrochka', otsrochka)
         formData.append('adress', adress)
         formData.append('categoriya', categoriya)
-        setShow3(false);
+        formData.append('status', status)
+        setShow2(false);
         await axios(`http://127.0.0.1:8000/prizivniki/`, {
             method: 'POST',
             data: formData,
@@ -75,15 +82,21 @@ function Priziv() {
                 'Content-Type': 'application/json',
                 "Authorization":  `Token ${sessionStorage.getItem('token')}`,
             }
-
         })
+        await fetch(`http://127.0.0.1:8000/prizivniki/`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Token ${sessionStorage.getItem('token')}`,
+            },
+        })
+            .then(response => response.json())
             .then((result) => {
                 setPriziv(result);
             })
     }
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/prizivniki/${getInterval(min_price, max_price, value)}`, {
+        fetch(`http://127.0.0.1:8000/prizivniki/${getInterval(min_vozrast, max_vozrast, surnamefil)}`, {
             method: 'GET',
             headers:{
                 "Authorization":  `Token ${sessionStorage.getItem('token')}`,
@@ -95,8 +108,8 @@ function Priziv() {
             })
     }, []);
 
+    const handleShow = ()=> setShow(true);
     const handleShow2 = ()=> setShow2(true);
-    const handleShow3 = ()=> setShow3(true);
 
 
     const Input1 = async (event) => {
@@ -106,7 +119,7 @@ function Priziv() {
         setMax(event.target.value)
     }
     const Input3 = async (event) => {
-        setValue(event.target.value)
+        setSurnamefil(event.target.value)
     }
     const Input31 = async (event) => {
         setName(event.target.value);
@@ -129,32 +142,38 @@ function Priziv() {
     const Input37 = async (event) => {
         setAdress(event.target.value)
     }
+    const Input38 = async (event) => {
+        setStatus(event.target.value)
+    }
+    const Input44 = async (event) => {
+        setID(event.target.value)
+    }
 
-    const [min_price, setMin] = useState();
-    const [max_price, setMax] = useState();
-    const [value, setValue] = useState('');
+    const [min_vozrast, setMin] = useState();
+    const [max_vozrast, setMax] = useState();
+    const [surnamefil, setSurnamefil] = useState('');
 
-    function getInterval (min_price, max_price, value) {
-        if (min_price && max_price && value) {
-            return `?vozrast_min=${min_price}&vozrast_max=${max_price}&surname=${value}`
+    function getInterval (min_vozrast, max_vozrast, surnamefil) {
+        if (min_vozrast && max_vozrast && surnamefil) {
+            return `?vozrast_min=${min_vozrast}&vozrast_max=${max_vozrast}&surname=${surnamefil}`
         }
-        if (min_price && max_price ) {
-            return `?vozrast_min=${min_price}&vozrast_max=${max_price}`
+        if (min_vozrast && max_vozrast ) {
+            return `?vozrast_min=${min_vozrast}&vozrast_max=${max_vozrast}`
         }
-        if (min_price && value) {
-            return `?vozrast_min=${min_price}&surname=${value}`
+        if (min_vozrast && surnamefil) {
+            return `?vozrast_min=${min_vozrast}&surname=${surnamefil}`
         }
-        if (max_price && value) {
-            return `?vozrast_max=${max_price}&surname=${value}`
+        if (max_vozrast && surnamefil) {
+            return `?vozrast_max=${max_vozrast}&surname=${surnamefil}`
         }
-        if (min_price) {
-            return `?vozrast_min=${min_price}`
+        if (min_vozrast) {
+            return `?vozrast_min=${min_vozrast}`
         }
-        if (max_price) {
-            return `?vozrast_max=${max_price}`
+        if (max_vozrast) {
+            return `?vozrast_max=${max_vozrast}`
         }
-        if (value) {
-            return `?surname=${value}`
+        if (surnamefil) {
+            return `?surname=${surnamefil}`
         }
         return ('')
 
@@ -163,12 +182,9 @@ function Priziv() {
     const [priziv, setPriziv] = useState([]);
 
     const del = (pk) => {
-        fetch('http://127.0.0.1:8000/prizivniki/' + pk + '/', {
+        fetch('http://127.0.0.1:8000/delPr/' + pk + '/', {
             method: 'DELETE',
-            headers: {
-                "Authorization": `Token ${sessionStorage.getItem('token')}`,
-                "Content-Type": "application/json"
-            },
+            body: JSON.stringify({"session_cookie": sessionStorage.getItem('token')})
         })
             .then(res => {
                 if (res.ok) {
@@ -184,14 +200,41 @@ function Priziv() {
     return (
         <>
         <div>
+            <div>
             <Link to="/priziv">Призывники</Link>
             <div className={"assortment"}><h1>Призывники</h1></div>
-            <img src={require('../fotki/main.jpeg')} width="280" height="255"/>
+            <img src={require('../fotki/4.jpeg')} width="250" height="255"/>
             <br/>
-            <Button href="/priziv/cart" variant="dark" class="btn btn-dark">Список для отправки в армию</Button>
-            <Button variant="primary" class="btn btn-dark" onClick={handleShow2}>Фильтр</Button>
-            <Button variant="primary" class="btn btn-dark" onClick={handleShow3}>Добавить запись</Button>
-            <Modal show={show2} onHide={handleClose2}>
+            <Button href="/priziv/cart" className="btn btn-dark me-2">Список для отправки в армию</Button>
+            <Button className="btn btn-primary me-2" onClick={handleShow}>Фильтр</Button>
+            <Button className="btn btn-primary" onClick={handleShow2}>Добавить запись</Button><br/><br/>
+                <div className="dropdown">
+                            <Button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                Кнопка выпадающего списка
+                            </Button>
+                            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a className="dropdown-item" href="#">Действие</a></li>
+                                <li><a className="dropdown-item" href="#">Другое действие</a></li>
+                                <li><a className="dropdown-item" href="#">Что-то еще здесь</a></li>
+                            </ul>
+                        </div>
+            <ul className={"priziv_list"}>
+                {priziv.map(item =>
+                    <div className={"priziv"} key={"surname:" + item.surname}><br/>
+                            <Link to={`/prizivniki/${item.pk}/`}>{item.surname} {item.name}<br/></Link>
+                            <a>ID: {item.pk}</a><br/>
+                            <a>Наличие отсрочки: {item.otsrochka}</a><br/>
+
+                            <Button variant="primary" className="btn btn-dark me-2" onClick={()=>{arm(item.name, item.surname, item.vozrast, item.categoriya, prizivId)}}>В армию</Button>
+                            <Button variant="primary" className="btn btn-danger me-2" disabled={sessionStorage.getItem('token') != 'a9b7c2262ffcefde2943e9054acbf5788dd5eebb'}  onClick={()=>{del(item.pk)}}>Удалить</Button>
+                        <br/>
+                        <br/>
+                    </div>
+                )}
+            </ul>
+            </div>
+            <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Фильтр</Modal.Title>
                 </Modal.Header>
@@ -213,17 +256,23 @@ function Priziv() {
                             onChange={Input3}
                         />
                         <Form.Group>
-                            <Button variant="primary" variant="dark" style={{right:0}} onClick={handleClose2}>Ok</Button>
+                            <Button variant="primary" variant="dark" style={{right:0}} onClick={handleClose}>Ok</Button>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
             </Modal>
-            <Modal show={show3} onHide={handleClose3}>
+            <Modal show={show2} onHide={handleClose2}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Фильтр</Modal.Title>
+                    <Modal.Title>Добавить запись</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
+                        <Form.Control
+                            type="text"
+                            className="input"
+                            placeholder='ID'
+                            onChange={Input44}
+                        />
                         <Form.Control
                             type="text"
                             className="input"
@@ -266,24 +315,18 @@ function Priziv() {
                             placeholder="Адрес"
                             onChange={Input37}
                         />
+                        <Form.Control
+                            type="text"
+                            className="input"
+                            placeholder="Статус"
+                            onChange={Input38}
+                        />
                         <Form.Group>
-                            <Button variant="primary" onClick={handleClose3}>Ok</Button>
+                            <Button variant="primary" onClick={handleClose2}>Ok</Button>
                         </Form.Group>
                     </Form>
                 </Modal.Body>
             </Modal>
-            <div className={"priziv_list"}>
-                {priziv.map(item => (
-                    <div className={"priziv"} key={"surname:" + item.surname}>
-                        <Link to={`/prizivniki/${item.pk}/`}>{item.surname} {item.name}<br/></Link>
-                        <a>Наличие отсрочки: {item.otsrochka}</a><br/>
-                        <Button variant="primary" variant="dark" className="me-2" class="btn btn-dark" onClick={()=>{arm(1 , item.name, item.surname, item.vozrast, item.categoriya, prizivId)}}>В армию</Button>
-                        <Button variant="primary" variant="danger" className="me-2" class="btn btn-dark" onClick={()=>{del(item.pk)}}>Удалить</Button>
-                        <br/>
-                        <br/>
-                    </div>
-                ))}
-            </div>
         </div>
         </>
     );

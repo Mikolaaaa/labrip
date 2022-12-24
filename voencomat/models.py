@@ -188,7 +188,15 @@ class cart(models.Model):
     surname = models.CharField(max_length=30)
     vozrast = models.IntegerField()
     categoriya = models.CharField(max_length=30)
+    status = models.CharField(max_length=30)
 
     class Meta:
         managed = False
         db_table = 'cart'
+
+class status(models.Model):
+    tek_znach = models.CharField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'status'

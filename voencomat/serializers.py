@@ -1,8 +1,14 @@
-from voencomat.models import Komissar, Prizivniki, Categoriya, Voencomati, auth, cart
+from voencomat.models import Komissar, Prizivniki, Categoriya, Voencomati, auth, cart, AuthUser, status
 from rest_framework import serializers
 from django_filters import rest_framework as filter
 
 
+class statusSerializer(serializers.ModelSerializer):
+    class Meta:
+        # Модель, которую мы сериализуем
+        model = status
+        # Поля, которые мы сериализуем
+        fields = ["pk", "tek_znach"]
 class KomissarSerializer(serializers.ModelSerializer):
     class Meta:
         # Модель, которую мы сериализуем
@@ -38,7 +44,13 @@ class AuthSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = cart
-        fields = ["pk", "name", "surname", "vozrast", "categoriya"]
+        fields = ["pk", "name", "surname", "vozrast", "categoriya", "status"]
+
+
+class MegaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuthUser
+        fields = ["pk", "password", "last_login", "is_superuser", "username", "first_name", "last_name", "email", "is_staff", "is_active", "date_joined"]
 
 
 class CharFilterInFilter(filter.BaseInFilter, filter.CharFilter):
@@ -53,3 +65,11 @@ class PrizivnikiFilter(filter.FilterSet):
         model = Prizivniki
         fields = ['vozrast', 'surname']
 
+
+class CartFilter(filter.FilterSet):
+    status = CharFilterInFilter(field_name='status', lookup_expr='in')
+    vozrast = filter.RangeFilter()
+
+    class Meta:
+        model = cart
+        fields = ['vozrast', 'status']

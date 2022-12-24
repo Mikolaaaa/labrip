@@ -16,57 +16,91 @@ export function GetPriziv() {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/prizivniki/', {
-            method: 'GET',
-            headers: {
-                "Authorization": `Token ${sessionStorage.getItem('token')}`,
-                "Content-Type": "application/json"
-            },
-        })
+    fetch('http://127.0.0.1:8000/prizivniki/')
         .then(response => response.json())
         .then(data => {
-          dispatch({type: 'GET_DATA', payload: data});
+          dispatch({type: 'GET_PRIZIVNIKI', payload: data});
         })
   }, [])
   return state.prizivniki
 }
 
-export function GetPrizivnik(pk) {
+export function GetPrizivnik(priziv_id) {
     const [state, dispatch] = useReducer(reducer, initialState)
-    let ID = window.location.pathname.split('/');
+
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/prizivniki/${ID[2]}/`, {
-            method: 'GET',
+        fetch(`http://127.0.0.1:8000/prizivniki/${priziv_id}/`, {
             headers: {
+                "Content-Type": "application/json",
                 "Authorization": `Token ${sessionStorage.getItem('token')}`,
-                "Content-Type": "application/json"
             },
         })
             .then(response => response.json())
             .then(data => {
-                dispatch({type: 'GET_PRIZIV', payload: data});
+                dispatch({type: 'GET_PRIZIVNIK', payload: data});
             })
     }, [])
-    return state.prizivniki
+    return state.prizivnik
 }
 
-export function GetCart() {
+export function GetArmiya() {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/cart/', {
-            method: 'GET',
+        fetch(`http://127.0.0.1:8000/cart/`, {
             headers: {
+                "Content-Type": "application/json",
                 "Authorization": `Token ${sessionStorage.getItem('token')}`,
-                "Content-Type": "application/json"
             },
         })
             .then(response => response.json())
             .then(data => {
-                dispatch({type: 'GET_CART', payload: data});
+                dispatch({type: 'GET_ARMIYA', payload: data});
             })
     }, [])
-    return state.cart
+    return state.armiya
 }
 
+export function GetPurchases() {
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+    useEffect(() => {
+        fetch(`http://127.0.0.1:8000/sells/`)
+            .then(response => response.json())
+            .then(data => {
+                dispatch({type: 'GET_PURCHASES', payload: data});
+            })
+    }, [])
+    return state.purchases
+}
+
+export function GetPurchase(user) {
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+    useEffect(() => {
+        fetch(`http://127.0.0.1:8000/sells/?id_user=${user}`)
+            .then(response => response.json())
+            .then(data => {
+                dispatch({type: 'GET_PURCHASE', payload: data});
+            })
+    }, [])
+    return state.purchases
+}
+
+export function GetBuys() {
+    const [state, dispatch] = useReducer(reducer, initialState)
+
+    useEffect(() => {
+        fetch(`http://127.0.0.1:8000/status_info/`, {
+            headers: {
+                "Authorization": `Token ${sessionStorage.getItem('token')}`,
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                dispatch({type: 'GET_BUYS', payload: data[0]});
+            })
+    }, [])
+    return state.buys
+}
 

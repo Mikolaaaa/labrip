@@ -26,7 +26,7 @@ function Reg() {
                 console.log(res);
                 const token = res.data.key;
                 localStorage.setItem('token', token);
-                alert('эээээ');
+                alert(token);
             })
     }
 

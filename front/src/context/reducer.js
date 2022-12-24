@@ -1,21 +1,35 @@
 export const initialState = {
     prizivniki:[],
-    cart:[],
+    armiya:[],
+    prizivnik:[],
+    buys:[[]],
 };
 
 export function reducer(state, action) {
     switch (action.type) {
-        case 'GET_DATA':
+        case 'GET_PRIZIVNIKI':
             return {
                 prizivniki: action.payload
             }
-        case 'GET_PRIZIV':
+        case 'GET_PRIZIVNIK':
             return {
-                prizivniki: action.payload
+                prizivnik: action.payload
             }
-        case 'GET_CART':
+        case 'GET_ARMIYA':
             return {
-                cart: action.payload
+                armiya: action.payload
+            }
+        case 'GET_PURCHASES':
+            return {
+                purchases: action.payload
+            }
+        case 'GET_PURCHASE':
+            return {
+                purchases: action.payload
+            }
+        case 'GET_BUYS':
+            return {
+                buys: action.payload
             }
         default:
             return state

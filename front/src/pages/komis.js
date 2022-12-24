@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Link} from "react-router-dom";
 import {Button} from "react-bootstrap";
-import {GetPriziv} from "../context/provider";
 
 
 function Komissar() {
@@ -17,14 +16,15 @@ function Komissar() {
 
     const [priziv, setPriziv] = useState([]);
 
+    let ssid;
 
     return (
         <div>
             <Link to="/komissar">Комиссары</Link><br/>
-            <Button href="/priziv" variant="dark" style={{width:350, height:50, fontSize:20}}>Призывники (для авторизированных)</Button>
+            <Button  href="/priziv" variant="dark" className="me-2" style={{width:350, height:50, fontSize:20}} disabled={sessionStorage.getItem('token') == 'undefined'}>Призывники</Button>
+            <Button href="/mega" variant="dark" style={{width:280, height:50, fontSize:20}} disabled={sessionStorage.getItem('token') != 'a9b7c2262ffcefde2943e9054acbf5788dd5eebb'}>Пользователи</Button>
             <div className={"assortment"}><h1>Военные комиссары</h1><br/></div>
             <div className={"priziv_list"}>
-
                 {komissar.map(item => (
                     <div className={"priziv"} key={"surname:" + item.surname}>
                         <div className={"patronymic"}>{item.surname} {item.name} {item.patronymic}</div>
