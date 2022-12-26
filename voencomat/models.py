@@ -189,10 +189,19 @@ class cart(models.Model):
     vozrast = models.IntegerField()
     categoriya = models.CharField(max_length=30)
     status = models.CharField(max_length=30)
+    otsrochka = models.CharField(max_length=30)
+    adress = models.CharField(max_length=30)
+    patronymic = models.CharField(max_length=30)
+    date_ozhid = models.CharField(max_length=30)
+    date_proh = models.CharField(max_length=30)
+    date_kon = models.CharField(max_length=30)
+    date_got = models.CharField(max_length=30)
+    date_nach = models.CharField(max_length=30)
 
     class Meta:
         managed = False
         db_table = 'cart'
+
 
 class status(models.Model):
     tek_znach = models.CharField(max_length=50)
@@ -200,3 +209,17 @@ class status(models.Model):
     class Meta:
         managed = False
         db_table = 'status'
+
+
+class Otsluzhivshie(models.Model):
+    name = models.CharField(max_length=30)
+    surname = models.CharField(max_length=30)
+    patronymic = models.CharField(max_length=30)
+    vozrast = models.IntegerField()
+    otsrochka = models.CharField(max_length=30)
+    adress = models.CharField(max_length=30)
+    categoriya = models.CharField(max_length=30)
+
+    class Meta:
+        managed = False
+        db_table = 'otsluzhivshie'

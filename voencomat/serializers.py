@@ -1,4 +1,4 @@
-from voencomat.models import Komissar, Prizivniki, Categoriya, Voencomati, auth, cart, AuthUser, status
+from voencomat.models import Komissar, Prizivniki, Categoriya, Voencomati, auth, cart, AuthUser, status, Otsluzhivshie
 from rest_framework import serializers
 from django_filters import rest_framework as filter
 
@@ -23,6 +23,12 @@ class PrizivnikiSerializer(serializers.ModelSerializer):
         fields = ["pk", "name", "surname", "patronymic", "vozrast", "otsrochka", "adress", "categoriya"]
 
 
+class OtsluzhivshieSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Otsluzhivshie
+        fields = ["pk", "name", "surname", "patronymic", "vozrast", "otsrochka", "adress", "categoriya"]
+
+
 class CategoriyaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categoriya
@@ -44,7 +50,7 @@ class AuthSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = cart
-        fields = ["pk", "name", "surname", "vozrast", "categoriya", "status"]
+        fields = ["pk", "name", "surname", "vozrast", "categoriya", "status", "otsrochka", "adress", "patronymic", "date_ozhid", "date_proh", "date_kon", "date_got", "date_nach"]
 
 
 class MegaSerializer(serializers.ModelSerializer):

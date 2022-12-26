@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     'rest_auth',
-
     'django.contrib.sites',
     'allauth',
     'allauth.account',
@@ -59,7 +58,6 @@ INSTALLED_APPS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:3000",
     "http://127.0.0.1:8000",
 ]
 

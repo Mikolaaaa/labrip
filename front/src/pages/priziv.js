@@ -11,20 +11,31 @@ function Priziv() {
     const prizivId = params.id
 
 
-    const arm=(name, surname, vozrast, categoriya)=> {
+    const arm=(name, surname, vozrast, categoriya, adress, otsrochka, patronymic, pk)=> {
+        const current = new Date();
+        const date_ozhid = `${current.getHours()}:${current.getMinutes()}:${current.getSeconds()} ${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+        console.log(date_ozhid)
         const ob = {
-            session_cookie: sessionStorage.getItem('token'),
             name: name,
             surname: surname,
             vozrast: vozrast,
             categoriya: categoriya,
+            adress: adress,
+            otsrochka: otsrochka,
+            patronymic: patronymic,
             status: "ждет медосмотра",
+            date_ozhid: date_ozhid,
+            date_proh: null,
+            date_kon: null,
+            date_got: null,
+            date_nach: null
         }
-        fetch("http://127.0.0.1:8000/addPr/", {
+        fetch("http://127.0.0.1:8000/addCart/", {
             method: "post",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Token ${sessionStorage.getItem('token')}`,
+                "Authorization": `${sessionStorage.getItem('token')}`,
+                "username": `${sessionStorage.getItem('username')}`,
             },
             body: JSON.stringify(ob)
         })
@@ -32,6 +43,19 @@ function Priziv() {
             .then(res => {
                 console.log(res);
             })
+        fetch('http://127.0.0.1:8000/delPr1/' + pk + '/',{
+            method: "delete",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `${sessionStorage.getItem('token')}`,
+                "username": `${sessionStorage.getItem('username')}`,
+            },
+        })
+            .then(res => res.json())
+            .then(res => {
+                console.log(res);
+            })
+        window.location.reload()
     }
 
 
@@ -44,15 +68,13 @@ function Priziv() {
     const [otsrochka, setOtsrochka] = useState();
     const [adress, setAdress] = useState();
     const [categoriya, setCategoriya] = useState();
-    const [status, setStatus] = useState();
-    const [ID, setID] = useState();
 
     const handleClose = async ()=> {
         setShow(false);
         await fetch(`http://127.0.0.1:8000/prizivniki/${getInterval(min_vozrast, max_vozrast, surnamefil)}`, {
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Token ${sessionStorage.getItem('token')}`,
+                "Authorization": `${sessionStorage.getItem('token')}`,
             },
         })
             .then(response => response.json())
@@ -64,7 +86,6 @@ function Priziv() {
 
     const handleClose2 = async ()=> {
         const formData = new FormData()
-        formData.append('ID', ID)
         formData.append('name', name)
         formData.append('surname', surname)
         formData.append('patronymic', patronymic)
@@ -72,21 +93,30 @@ function Priziv() {
         formData.append('otsrochka', otsrochka)
         formData.append('adress', adress)
         formData.append('categoriya', categoriya)
-        formData.append('status', status)
         setShow2(false);
-        await axios(`http://127.0.0.1:8000/prizivniki/`, {
-            method: 'POST',
-            data: formData,
+        const ob = {
+            name: name,
+            surname: surname,
+            patronymic: patronymic,
+            vozrast: vozrast,
+            otsrochka: otsrochka,
+            adress: adress,
+            categoriya: categoriya,
+        }
+        console.log(ob);
+        await fetch(`http://127.0.0.1:8000/addPr/`, {
+            method: "post",
             headers:{
-                'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                "Authorization":  `Token ${sessionStorage.getItem('token')}`,
-            }
+                "Authorization":  `${sessionStorage.getItem('token')}`,
+                "username": `${sessionStorage.getItem('username')}`,
+            },
+            body: JSON.stringify(ob)
         })
         await fetch(`http://127.0.0.1:8000/prizivniki/`, {
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Token ${sessionStorage.getItem('token')}`,
+                "Authorization": `${sessionStorage.getItem('token')}`,
             },
         })
             .then(response => response.json())
@@ -99,7 +129,7 @@ function Priziv() {
         fetch(`http://127.0.0.1:8000/prizivniki/${getInterval(min_vozrast, max_vozrast, surnamefil)}`, {
             method: 'GET',
             headers:{
-                "Authorization":  `Token ${sessionStorage.getItem('token')}`,
+                "Authorization":  `${sessionStorage.getItem('token')}`,
             }
         })
             .then(response => response.json())
@@ -142,12 +172,6 @@ function Priziv() {
     const Input37 = async (event) => {
         setAdress(event.target.value)
     }
-    const Input38 = async (event) => {
-        setStatus(event.target.value)
-    }
-    const Input44 = async (event) => {
-        setID(event.target.value)
-    }
 
     const [min_vozrast, setMin] = useState();
     const [max_vozrast, setMax] = useState();
@@ -184,16 +208,19 @@ function Priziv() {
     const del = (pk) => {
         fetch('http://127.0.0.1:8000/delPr/' + pk + '/', {
             method: 'DELETE',
-            body: JSON.stringify({"session_cookie": sessionStorage.getItem('token')})
+            headers:{
+                "Authorization":  `${sessionStorage.getItem('token')}`,
+                "username": sessionStorage.getItem('username')
+            },
         })
             .then(res => {
                 if (res.ok) {
                     console.log("HTTP request successful");
-                    window.location.reload();
                 } else {
                     console.log("HTTP request unsuccessful");
                 }
             })
+        window.location.reload()
     }
 
 
@@ -203,31 +230,17 @@ function Priziv() {
             <div>
             <Link to="/priziv">Призывники</Link>
             <div className={"assortment"}><h1>Призывники</h1></div>
-            <img src={require('../fotki/4.jpeg')} width="250" height="255"/>
-            <br/>
-            <Button href="/priziv/cart" className="btn btn-dark me-2">Список для отправки в армию</Button>
+                <Button href="/priziv/cart" className="btn btn-dark me-2">Список для отправки в армию</Button>
             <Button className="btn btn-primary me-2" onClick={handleShow}>Фильтр</Button>
-            <Button className="btn btn-primary" onClick={handleShow2}>Добавить запись</Button><br/><br/>
-                <div className="dropdown">
-                            <Button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                Кнопка выпадающего списка
-                            </Button>
-                            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a className="dropdown-item" href="#">Действие</a></li>
-                                <li><a className="dropdown-item" href="#">Другое действие</a></li>
-                                <li><a className="dropdown-item" href="#">Что-то еще здесь</a></li>
-                            </ul>
-                        </div>
+            <Button className="btn btn-primary me-2" onClick={handleShow2}>Добавить запись</Button>
+                <Button variant="primary" hidden={sessionStorage.getItem('token') === 'undefined'}  className="btn btn-dark me-2" href="/archive" >Архив призывников</Button><br/><br/>
             <ul className={"priziv_list"}>
                 {priziv.map(item =>
                     <div className={"priziv"} key={"surname:" + item.surname}><br/>
                             <Link to={`/prizivniki/${item.pk}/`}>{item.surname} {item.name}<br/></Link>
-                            <a>ID: {item.pk}</a><br/>
                             <a>Наличие отсрочки: {item.otsrochka}</a><br/>
-
-                            <Button variant="primary" className="btn btn-dark me-2" onClick={()=>{arm(item.name, item.surname, item.vozrast, item.categoriya, prizivId)}}>В армию</Button>
-                            <Button variant="primary" className="btn btn-danger me-2" disabled={sessionStorage.getItem('token') != 'a9b7c2262ffcefde2943e9054acbf5788dd5eebb'}  onClick={()=>{del(item.pk)}}>Удалить</Button>
+                            <Button variant="primary" hidden={sessionStorage.getItem('token') === 'undefined'}  className="btn btn-dark me-2" onClick={()=>{arm(item.name, item.surname, item.vozrast, item.categoriya, item.adress, item.otsrochka, item.patronymic, item.pk, prizivId)}}>В армию</Button>
+                            <Button variant="primary" hidden={sessionStorage.getItem('username') !== 'megauser'} className="btn btn-danger me-2" onClick={()=>{del(item.pk)}}>Удалить</Button>
                         <br/>
                         <br/>
                     </div>
@@ -270,12 +283,6 @@ function Priziv() {
                         <Form.Control
                             type="text"
                             className="input"
-                            placeholder='ID'
-                            onChange={Input44}
-                        />
-                        <Form.Control
-                            type="text"
-                            className="input"
                             placeholder='Имя'
                             onChange={Input31}
                         />
@@ -314,12 +321,6 @@ function Priziv() {
                             className="input"
                             placeholder="Адрес"
                             onChange={Input37}
-                        />
-                        <Form.Control
-                            type="text"
-                            className="input"
-                            placeholder="Статус"
-                            onChange={Input38}
                         />
                         <Form.Group>
                             <Button variant="primary" onClick={handleClose2}>Ok</Button>

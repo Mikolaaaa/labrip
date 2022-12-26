@@ -13,6 +13,7 @@ router.register(r'categoriya',voencom_views.CategoriyaViewSet)
 router.register(r'voencomati', voencom_views.VoencomatiViewSet)
 router.register(r'status', voencom_views.statusViewSet)
 router.register(r'cart', voencom_views.cartViewSet)
+router.register(r'otsluzhivshie', voencom_views.OtsluzhivshieViewSet)
 
 
 urlpatterns = [
@@ -23,7 +24,15 @@ urlpatterns = [
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('statusch/<int:id>/', voencom_views.statuschange),
     path('otsrochkach/<int:id>/', voencom_views.otsrochkachange),
+    path('prizivnikch/<int:id>/', voencom_views.prizivnikchange),
     path('del/<int:id>/', voencom_views.delArmiya),
     path('delPr/<int:id>/', voencom_views.delPriziv),
-    path('addPr/', voencom_views.create_prizivnik)
+    path('delPr1/<int:id>/', voencom_views.delPriziv1),
+    path('addCart/', voencom_views.create_prizivnik),
+    path('delKom/<int:id>/', voencom_views.delKomis),
+    path('delVoenc/<int:id>/', voencom_views.delVoencomat),
+    path('addKom/', voencom_views.create_komissar),
+    path('addVoenc/', voencom_views.create_voencomat),
+    path('addPr/', voencom_views.create_prizivnik1),
+    path('addOts/', voencom_views.create_otsluzhivshiy)
 ]

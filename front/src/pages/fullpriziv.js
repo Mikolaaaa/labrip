@@ -12,7 +12,6 @@ function FullPriziv() {
     const fullpriziv = GetPrizivnik(ID[2])
 
 
-    const [fullpriziv1, setFullpriziv1] = useState([]);
     const [show, setShow] = useState(false);
     const [name, setName] = useState();
     const [surname, setSurname] = useState();
@@ -32,26 +31,26 @@ function FullPriziv() {
         formData.append('adress', adress)
         formData.append('categoriya', categoriya)
         setShow(false);
+        const ob = {
+            name: name,
+            surname: surname,
+            vozrast: vozrast,
+            categoriya: categoriya,
+            adress: adress,
+            otsrochka: otsrochka,
+            patronymic: patronymic
+        }
         let ID = window.location.pathname.split('/');
-        await axios(`http://127.0.0.1:8000/prizivniki/${ID[2]}/` , {
+        await fetch(`http://127.0.0.1:8000/prizivnikch/${ID[2]}/` , {
             method: 'PUT',
-            data: formData,
             headers:{
-                'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                "Authorization": `Token ${sessionStorage.getItem('token')}`,
-            }
-        })
-        await fetch(`http://127.0.0.1:8000/prizivniki/${ID[2]}/`, {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Token ${sessionStorage.getItem('token')}`,
+                "Authorization": `${sessionStorage.getItem('token')}`,
+                "username": `${sessionStorage.getItem('username')}`,
             },
+            body: JSON.stringify(ob)
         })
-            .then(response => response.json())
-            .then((result) => {
-                setFullpriziv1(result);
-            })
+        window.location.reload()
     }
 
     const otsrochkaCh = (fullpriziv1) => {
@@ -62,7 +61,8 @@ function FullPriziv() {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
-                "Authorization": `Token ${sessionStorage.getItem('token')}`,
+                "Authorization": `${sessionStorage.getItem('token')}`,
+                "username": `${sessionStorage.getItem('username')}`,
             },
             body: JSON.stringify(otsrochka_change)
         })
@@ -91,7 +91,8 @@ function FullPriziv() {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
-                "Authorization": `Token ${sessionStorage.getItem('token')}`,
+                "Authorization": `${sessionStorage.getItem('token')}`,
+                "username": `${sessionStorage.getItem('username')}`,
             },
             body: JSON.stringify(otsrochka_change)
         })
@@ -129,12 +130,6 @@ function FullPriziv() {
         setAdress(event.target.value)
     }
 
-    const pokaz = (id1,id2) => {
-
-    }
-
-
-
 
     return (
         <div>
@@ -142,7 +137,6 @@ function FullPriziv() {
                     <ul>
                             <Link to="/priziv">Призывники</Link> / <Link to={`/${fullpriziv.surname}`}>{fullpriziv.surname}</Link>
                             <br/>
-                            <img src={require(`../fotki/3.jpeg`)} width="240" height="255"/>
                             <div className={"surname"}><a>Фамилия: {fullpriziv.surname}</a> </div>
                             <div className={"surname"}><a>Имя: {fullpriziv.name}</a></div>
                             <div className={"surname"}><a>Отчество: {fullpriziv.patronymic}</a></div>
@@ -150,11 +144,8 @@ function FullPriziv() {
                             <div className={"surname"}><a>Возраст: {fullpriziv.vozrast}</a></div>
                             <div className={"surname"}><a>Наличие отсрочки: {fullpriziv.otsrochka}</a></div>
                             <div className={"surname"}><a>Адрес: {fullpriziv.adress}</a></div>
-                            <Button id="id1" onClick={()=>{pokaz('id1','id2')}}>проходит медосмотр</Button>
-                            <Button id="id2" onClick={pokaz('id2','id3')} className="hide">медосмотр пройден</Button>
-                            <Button id="id3" onClick={pokaz('id3','id4')} className="hide">готов к призыву</Button>
-                            <Button id="id4" onClick={pokaz('id4','id1')} className="hide">призван</Button>
-                            <Button variant="primary" variant="dark" className="me-3" class="btn btn-light" onClick={()=>{otsrochkaCh1(fullpriziv)}}>Наличие отсрочки: {fullpriziv1.otsrochka}</Button>
+                            <Button hidden={fullpriziv.otsrochka==="есть"} variant="primary" variant="dark" className="me-3" class="btn btn-light" onClick={()=>{otsrochkaCh1(fullpriziv)}}>Принес отсрочку</Button>
+                            <Button hidden={fullpriziv.otsrochka==="нет"} variant="primary" variant="dark" className="me-3" class="btn btn-light" onClick={()=>{otsrochkaCh1(fullpriziv)}}>Действие отсрочки закончилось</Button>
                     </ul>
                 </div>
                     <Button className="btn btn-dark" onClick={handleShow}>Изменить запись</Button>

@@ -11,7 +11,9 @@ import {Auth} from "./pages/login";
 import Cart from "./pages/armiya";
 import Reg from "./pages/reg";
 import Mega from "./pages/mega"
-import {Navbar} from "react-bootstrap";
+import {Button, Navbar} from "react-bootstrap";
+import Nav from "./components/nav";
+import Archiv from "./pages/archiv";
 
 function App() {
   return (
@@ -26,71 +28,38 @@ function App() {
                 <Reg/>
               </Route>
               <Route exact path="/priziv">
-                <div className="topnav">
-                  <a className="active" href="/">Выход</a>
-                  <a href="/priziv">Призывники</a>
-                  <a href="/komissar">Военкомы</a>
-                  <a href="/voencomati">Военкоматы</a>
-                </div>
-                  <Priziv/>
-                <Back/>
-              </Route>
-              <Route exact path="/priziv1">
-                <div className="topnav">
-                  <a className="active" href="/">Выход</a>
-                  <a href="/priziv">Призывники</a>
-                  <a href="/komissar">Военкомы</a>
-                  <a href="/voencomati">Военкоматы</a>
-                </div>
-                  <Priziv/>
+                <Nav/>
+                <Priziv/>
                 <Back/>
               </Route>
               <Route exact path="/komissar">
-                <div className="topnav">
-                  <a className="active" href="/">Выход</a>
-                  <a href="/komissar">Военкомы</a>
-                  <a href="/voencomati">Военкоматы</a>
-                </div>
+                <Nav/>
                 <Komissar/>
                 <Back/>
               </Route>
               <Route exact path="/voencomati">
-                <div className="topnav">
-                  <a className="active" href="/">Выход</a>
-                  <a href="/komissar">Военкомы</a>
-                  <a href="/voencomati">Военкоматы</a>
-                </div>
+                <Nav/>
                 <Voencomati/>
                 <Back/>
               </Route>
               <Route exact path={`/prizivniki/:rangeId`}>
-                <div className="topnav">
-                  <a className="active" href="/">Выход</a>
-                  <a href="/priziv">Призывники</a>
-                  <a href="/komissar">Военкомы</a>
-                  <a href="/voencomati">Военкоматы</a>
-                </div>
+                <Nav/>
                 <FullPriziv/>
                 <Back/>
               </Route>
               <Route exact path="/priziv/cart">
-                <div className="topnav">
-                  <a className="active" href="/">Выход</a>
-                  <a href="/priziv">Призывники</a>
-                  <a href="/komissar">Военкомы</a>
-                  <a href="/voencomati">Военкоматы</a>
-                </div>
+                <Nav/>
                 <Cart/>
                 <Back/>
               </Route>
               <Route exact path="/mega">
-                <div className="topnav">
-                  <a className="active" href="/">Выход</a>
-                  <a href="/priziv">Призывники</a>
-                  <a href="/komissar">Военкомы</a>
-                  <a href="/voencomati">Военкоматы</a>
-                </div>
+                <Nav/>
                 <Mega/>
+                <Back/>
+              </Route>
+              <Route exact path="/archive">
+                <Nav/>
+                <Archiv/>
                 <Back/>
               </Route>
             </Switch>

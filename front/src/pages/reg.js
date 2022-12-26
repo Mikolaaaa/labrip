@@ -1,6 +1,6 @@
 import React, {useState} from "react";
-import {Link} from "react-router-dom";
 import "../App.css"
+import {Button} from "react-bootstrap";
 
 function Reg() {
     const [log, setLog] = useState('');
@@ -79,26 +79,25 @@ function Reg() {
                             className="input-block33"
                         />
                     </div>
-                    <br />
                     <div className="mt-6">
-                        <Link to="/"
-                              className="arm6_button"
+                        <Button to="/"
+                              className="arm6_button btn-light"
                               onClick={() => Create()}
                         >
                             Зарегистрироваться
-                        </Link>
+                        </Button>
                     </div>
                 </form>
-
+                <br/>
                 <p className="repage-block">
                     {" "}
                     Уже есть аккаунт?{" "}
-                    <a
+                    <Button
                         href="/"
-                        className="font-medium text-indigo-600 text-xl hover:underline"
+                        className="font-medium text-indigo-600 text-xl hover:underline btn-light arm6_button"
                     >
                         Войти
-                    </a>
+                    </Button>
                 </p>
             </div>
     )

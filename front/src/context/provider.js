@@ -61,30 +61,38 @@ export function GetArmiya() {
     return state.armiya
 }
 
-export function GetPurchases() {
+export function GetVoencomati() {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/sells/`)
+        fetch(`http://127.0.0.1:8000/voencomati/`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
             .then(response => response.json())
             .then(data => {
-                dispatch({type: 'GET_PURCHASES', payload: data});
+                dispatch({type: 'GET_VOENCOMATI', payload: data});
             })
     }, [])
-    return state.purchases
+    return state.voencomati
 }
 
-export function GetPurchase(user) {
+export function GetKomissar() {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/sells/?id_user=${user}`)
+        fetch(`http://127.0.0.1:8000/komissar/`, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
             .then(response => response.json())
             .then(data => {
-                dispatch({type: 'GET_PURCHASE', payload: data});
+                dispatch({type: 'GET_KOMISSAR', payload: data});
             })
     }, [])
-    return state.purchases
+    return state.komissari
 }
 
 export function GetBuys() {

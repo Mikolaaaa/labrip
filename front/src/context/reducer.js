@@ -2,7 +2,8 @@ export const initialState = {
     prizivniki:[],
     armiya:[],
     prizivnik:[],
-    buys:[[]],
+    voencomati:[],
+    komissari:[],
 };
 
 export function reducer(state, action) {
@@ -19,13 +20,13 @@ export function reducer(state, action) {
             return {
                 armiya: action.payload
             }
-        case 'GET_PURCHASES':
+        case 'GET_VOENCOMATI':
             return {
-                purchases: action.payload
+                voencomati: action.payload
             }
-        case 'GET_PURCHASE':
+        case 'GET_KOMISSAR':
             return {
-                purchases: action.payload
+                komissari: action.payload
             }
         case 'GET_BUYS':
             return {
